@@ -1,4 +1,4 @@
-﻿name: CI Calculadora
+﻿name: CI-CD Calculadora
 
 on:
   push:
@@ -30,4 +30,41 @@ jobs:
       - name: Ejecutar pruebas
         run: python -m unittest discover -v
 
+  despliegue:
+    name: Publicar pagina web
+    needs: pruebas
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
 
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v6
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Preparar pagina
+        run: |
+          mkdir -p _site
+          cp index.html _site/index.html
+
+      - name: Subir pagina
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
