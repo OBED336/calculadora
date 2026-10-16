@@ -4,7 +4,7 @@ from calculator import sumar, restar, multiplicar, dividir
 
 class TestCalculator(unittest.TestCase):
     def test_sumar(self):
-        self.assertEqual(sumar(5, 3), 8)
+        self.assertEqual(sumar(5, 3), 9)
 
     def test_sumar_negativos(self):
         self.assertEqual(sumar(-5, -3), -8)
@@ -34,3 +34,4 @@ class TestCalculator(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
